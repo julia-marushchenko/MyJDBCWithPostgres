@@ -2,6 +2,7 @@
 package com.myjdbc;
 
 import com.myjdbc.dao.ServiceDao;
+import com.myjdbc.dao.SimpleProductDao;
 import com.myjdbc.entity.Service;
 import java.math.BigDecimal;
 import java.util.List;
@@ -60,5 +61,14 @@ public class App {
         System.out.println("\n*** GET_ALL ***");
         servicesNew1.forEach(System.out::println);
 
+        // Creating SimpleProduct.
+        System.out.println("\n\n*** SIMPLE PRODUCT ***");
+        SimpleProductDao spdao = new SimpleProductDao();
+        UUID productID = spdao.createProduct("product");
+        System.out.println(productID);
+
+        // Limit example.
+        System.out.println("\n\n*** LIMIT ***");
+        serviceDao.getAllLimit(2).forEach(System.out::println);
     }
 }
