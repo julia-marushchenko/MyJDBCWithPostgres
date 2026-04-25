@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * CustomerDao class.
  */
-public class CustomerDao implements DAO {
+public class CustomerDao implements DAO<Customer, UUID> {
 
     // Constants to store requests to database.
     private static final String GET_ALL = "select * from customers";
@@ -55,7 +55,7 @@ public class CustomerDao implements DAO {
 
     // Method to create a new customer.
     @Override
-    public Customer create(Object entity) {
+    public Customer create(Customer entity) {
 
         // Generating UUID randomly.
         UUID customerId = UUID.randomUUID();
@@ -70,11 +70,11 @@ public class CustomerDao implements DAO {
             // Creating Prepared statement.
             PreparedStatement statement = connection.prepareStatement(CREATE);
             statement.setObject(1, customerId);
-            statement.setString(2, ((Customer)entity).getFirstName());
-            statement.setString(3, ((Customer) entity).getLastName());
-            statement.setString(4, ((Customer) entity).getEmail());
-            statement.setString(5, ((Customer) entity).getPhone());
-            statement.setString(6, ((Customer) entity).getAddress());
+            statement.setString(2, entity.getFirstName());
+            statement.setString(3, entity.getLastName());
+            statement.setString(4, entity.getEmail());
+            statement.setString(5, entity.getPhone());
+            statement.setString(6, entity.getAddress());
             statement.execute();
             connection.commit();
             statement.close();
@@ -132,7 +132,7 @@ public class CustomerDao implements DAO {
     }
 
     @Override
-    public Customer update(Object entity) {
+    public Customer update(Customer entity) {
         // Creation a connection.
         Connection connection = DatabaseUtils.getConnection();
 
@@ -143,12 +143,12 @@ public class CustomerDao implements DAO {
 
             // Creating Prepared statement.
             PreparedStatement statement = connection.prepareStatement(UPDATE);
-            statement.setObject(1, ((Customer)entity).getCustomerId());
-            statement.setString(2, ((Customer)entity).getFirstName());
-            statement.setObject(3, ((Customer) entity).getLastName());
-            statement.setString(4, ((Customer) entity).getEmail());
-            statement.setString(4, ((Customer) entity).getPhone());
-            statement.setString(4, ((Customer) entity).getAddress());
+            statement.setObject(1, entity.getCustomerId());
+            statement.setString(2, entity.getFirstName());
+            statement.setObject(3, entity.getLastName());
+            statement.setString(4, entity.getEmail());
+            statement.setString(4,  entity.getPhone());
+            statement.setString(4, entity.getAddress());
             statement.execute();
             connection.commit();
             statement.close();
@@ -184,7 +184,7 @@ public class CustomerDao implements DAO {
             statement.execute();
             connection.commit();
             statement.close();
-            
+
         } catch (SQLException ex) {
 
             //Setting rollback.
