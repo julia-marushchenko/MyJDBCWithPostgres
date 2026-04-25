@@ -73,7 +73,7 @@ public class ServiceDao implements DAO<Service, UUID> {
             }
         }
 
-        // Creating a list of services.
+        // Creating a new service.
         Optional<Service> service = this.getOne(serviceId);
 
         // Checking if data was not saved into database.
