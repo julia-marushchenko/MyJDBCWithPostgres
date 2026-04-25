@@ -19,6 +19,7 @@ public class ServiceDao implements DAO<Service, UUID> {
     private static final String CREATE = "insert into services (service_id, name, price) values (?, ?, ?)";
     private static final String UPDATE = "update sevices set name = ?, price = ? where service_id = ?";
     private static final String DELETE = "delete from services where service_id = ?";
+    private static final String GET_ALL_LIMIT = "select service_id, name, price from services order by name limit ?";
 
     // Method to get all services from database.
     @Override
@@ -73,7 +74,7 @@ public class ServiceDao implements DAO<Service, UUID> {
             }
         }
 
-        // Creating a new service.
+        // Creating a list of services.
         Optional<Service> service = this.getOne(serviceId);
 
         // Checking if data was not saved into database.
@@ -182,6 +183,31 @@ public class ServiceDao implements DAO<Service, UUID> {
             service.setName(rs.getString("name"));
             service.setPrice(rs.getBigDecimal("price"));
             services.add(service);
+        }
+        return services;
+    }
+
+    // Method to get limit number of services.
+    public List<Service> getAllLimit(int limit) {
+
+        // List to store services.
+        List<Service> services = new ArrayList<>();
+
+        // Setting connection to database.
+        Connection connection = DatabaseUtils.getConnection();
+
+        // Sending statement to db.
+        try(PreparedStatement statement = connection.prepareStatement(GET_ALL_LIMIT)) {
+
+            statement.setInt(1, limit);
+            ResultSet rs = statement.executeQuery();
+            services = this.processResultSet(rs);
+            rs.close();
+
+        } catch (SQLException ex) {
+
+            ex.printStackTrace();
+
         }
         return services;
     }
