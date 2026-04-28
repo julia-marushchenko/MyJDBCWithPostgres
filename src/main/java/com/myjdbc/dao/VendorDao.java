@@ -43,8 +43,33 @@ public class VendorDao implements DAO {
         return null;
     }
 
+    processResultSet(
+
     @Override
     public void delete(UUID uuid) {
 
+    }
+
+    // Method to store all vendors in buffer.
+    private List<Vendor> processResultSet(ResultSet rs) throws SQLException {
+        // Creating a list to store customers.
+        List<Vendor> vendors = new ArrayList<>();
+
+        // Iterating through all customers.
+        while (rs.next()) {
+            Vendor vendor = new Vendor();
+            vendor.setVendorId((UUID) rs.getObject("vendor_id"));
+            vendor.setName(rs.getString("name"));
+            vendor.setContact(rs.getString("contact"));
+            vendor.setPhone(rs.getString("phone"));
+            vendor.setEmail(rs.getString("email"));
+            vendor.setAddress(rs.getString("address"));
+
+            // Adding vendor to a list.
+            vendors.add(vendor);
+        }
+
+        // Returning all vendors.
+        return vendors;
     }
 }
