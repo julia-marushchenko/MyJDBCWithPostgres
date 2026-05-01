@@ -25,7 +25,25 @@ public class VendorDao implements DAO {
 
     @Override
     public List getAll() {
-        return List.of();
+
+        // Creating a list to store all vendors.
+        List<Vendor> vendors = new ArrayList<>();
+
+        // Creating a connection to database.
+        Connection connection = DatabaseUtils.getConnection();
+
+        // Execution GET_ALL statement.
+        try(Statement statement = connection.createStatement()) {
+
+            // Getting Result Set.
+            ResultSet rs = statement.executeQuery(GET_ALL);
+            vendors = this.processResultSet(rs);
+        } catch (SQLException ex) {
+
+            // Printing stack of exception.
+            ex.printStackTrace();
+        }
+        return vendors;
     }
 
     @Override
