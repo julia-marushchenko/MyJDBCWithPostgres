@@ -46,9 +46,54 @@ public class VendorDao implements DAO {
         return vendors;
     }
 
+    // Method to create a new vendor.
     @Override
-    public Object create(Object entity) {
-        return null;
+    public Vendor create(Vendor entity) {
+
+        // Generating UUID randomly.
+        UUID vendorId = UUID.randomUUID();
+
+        // Creating connection to database.
+        Connection connection = DatabaseUtils.getConnection();
+
+        try {
+            // Making connection transactional.
+            connection.setAutoCommit(false);
+
+            // Creating Prepared statement.
+            PreparedStatement statement = connection.prepareStatement(CREATE);
+            statement.setObject(1, vendorId);
+            statement.setString(2, entity.getName());
+            statement.setString(3, entity.getContact());
+            statement.setString(4, entity.getPhone();
+            statement.setString(5, entity.getEmail());
+            statement.setString(6, entity.getAddress());
+            statement.execute();
+            connection.commit();
+            statement.close();
+
+        } catch (SQLException ex) {
+
+            //Setting rollback.
+            try {
+
+                // Rollback.
+                connection.rollback();
+            } catch (SQLException e) {
+
+                // Printing stack of exception.
+                e.printStackTrace();
+            }
+        }
+
+        Optional<Vendor> vendor = this.getOne(vendorId);
+
+        // Checking if data was saved.
+        if (!vendor.isPresent()) {
+            return null;
+        }
+
+        return vendor.get();
     }
 
     @Override
