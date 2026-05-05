@@ -96,8 +96,29 @@ public class VendorDao implements DAO {
         return vendor.get();
     }
 
+    // Method to get one vendor by its id.
     @Override
     public Optional getOne(UUID uuid) {
+        
+        // Creating prepared statement to get vendor by its id.
+        try(PreparedStatement statement = DatabaseUtils.getConnection().prepareStatement(GET_ONE)) {
+
+            // Setting values of parameters of prepared statement to get vendor by its id.
+            statement.setObject(1, uuid);
+
+            // Getting data from database.
+            ResultSet rs = statement.executeQuery();
+            List<Vendor> vendors = this.processResultSet(rs);
+            if(vendors.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(vendors.get(0));
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        // Returns Optional.empty.
         return Optional.empty();
     }
 
