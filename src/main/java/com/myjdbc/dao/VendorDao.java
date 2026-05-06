@@ -122,9 +122,42 @@ public class VendorDao implements DAO {
         return Optional.empty();
     }
 
+    // Method to update vendor entity.
     @Override
-    public Object update(Object entity) {
-        return null;
+    public Object update(Object vendor) {
+
+        // Creation a connection.
+        Connection connection = DatabaseUtils.getConnection();
+
+        // Trying to write to database.
+        try {
+            // Creating Prepared statement.
+            PreparedStatement statement = connection.prepareStatement(CREATE);
+
+            // Making transactional connection.
+            connection.setAutoCommit(false);
+
+            // Creating Prepared statement.
+            statement.setObject(1, ((Vendor)vendor).getVendorId());
+            statement.setString(2, ((Vendor)vendor).getName());
+            statement.setString(3, ((Vendor)vendor).getContact());
+            statement.setString(4, ((Vendor)vendor).getPhone());
+            statement.setString(5, ((Vendor)vendor).getEmail());
+            statement.setString(6, ((Vendor)vendor).getAddress());
+            statement.execute();
+            connection.commit();
+            statement.close();
+        } catch (SQLException ex) {
+
+            //Setting rollback.
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        // Return statement.
+        return vendor;
     }
 
     processResultSet(
