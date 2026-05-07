@@ -1,17 +1,20 @@
 package com.myjdbc.dao;
 
+import com.myjdbc.entity.Vendor;
+import com.myjdbc.util.DatabaseUtils;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.sql.*;
+import java.util.*;
+
 
 
 /**
  * VendorDao class.
  */
-public class VendorDao implements DAO {
+public class VendorDao implements DAO<Vendor, UUID> {
 
     // Constants to store requests to database.
-    private static final String GET_ALL = "select * from vendor";
+    private static final String GET_ALL = "select * from vendors";
     private static final String CREATE = "insert into vendors (vendors_id, name, contact, phone, email," +
             "address values (?, ?, ?, ?, ?, ?)";
     private static final String GET_ONE = "select vendor_id, name, contact, phone, email, address " +
@@ -65,7 +68,7 @@ public class VendorDao implements DAO {
             statement.setObject(1, vendorId);
             statement.setString(2, entity.getName());
             statement.setString(3, entity.getContact());
-            statement.setString(4, entity.getPhone();
+            statement.setString(4, entity.getPhone());
             statement.setString(5, entity.getEmail());
             statement.setString(6, entity.getAddress());
             statement.execute();
@@ -99,7 +102,7 @@ public class VendorDao implements DAO {
     // Method to get one vendor by its id.
     @Override
     public Optional getOne(UUID uuid) {
-        
+
         // Creating prepared statement to get vendor by its id.
         try(PreparedStatement statement = DatabaseUtils.getConnection().prepareStatement(GET_ONE)) {
 
@@ -124,7 +127,7 @@ public class VendorDao implements DAO {
 
     // Method to update vendor entity.
     @Override
-    public Object update(Object vendor) {
+    public Vendor update(Vendor vendor) {
 
         // Creation a connection.
         Connection connection = DatabaseUtils.getConnection();
@@ -138,12 +141,12 @@ public class VendorDao implements DAO {
             connection.setAutoCommit(false);
 
             // Creating Prepared statement.
-            statement.setObject(1, ((Vendor)vendor).getVendorId());
-            statement.setString(2, ((Vendor)vendor).getName());
-            statement.setString(3, ((Vendor)vendor).getContact());
-            statement.setString(4, ((Vendor)vendor).getPhone());
-            statement.setString(5, ((Vendor)vendor).getEmail());
-            statement.setString(6, ((Vendor)vendor).getAddress());
+            statement.setObject(1, vendor.getVendorId());
+            statement.setString(2, vendor.getName());
+            statement.setString(3, vendor.getContact());
+            statement.setString(4, vendor.getPhone());
+            statement.setString(5, vendor.getEmail());
+            statement.setString(6, vendor.getAddress());
             statement.execute();
             connection.commit();
             statement.close();
@@ -160,12 +163,10 @@ public class VendorDao implements DAO {
         return vendor;
     }
 
-    processResultSet(
-
     // Method to delete vendor by its id.
     @Override
     public void delete(UUID uuid) {
-        
+
         // Creating a connection to database.
         Connection connection = DatabaseUtils.getConnection();
 
