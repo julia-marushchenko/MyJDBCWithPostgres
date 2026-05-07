@@ -162,9 +162,34 @@ public class VendorDao implements DAO {
 
     processResultSet(
 
+    // Method to delete vendor by its id.
     @Override
     public void delete(UUID uuid) {
+        
+        // Creating a connection to database.
+        Connection connection = DatabaseUtils.getConnection();
 
+        // Deleting a vendor.
+        try {
+            // Making transactional connection.
+            connection.setAutoCommit(false);
+
+            // Creating Prepared statement.
+            PreparedStatement statement = connection.prepareStatement(DELETE);
+            statement.setObject(1, uuid);
+            statement.execute();
+            connection.commit();
+            statement.close();
+
+        } catch (SQLException ex) {
+
+            //Setting rollback.
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // Method to store all vendors in buffer.
